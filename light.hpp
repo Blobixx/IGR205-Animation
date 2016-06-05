@@ -4,7 +4,7 @@
 #include <GL/gl.h>
 
 #include "camera.hpp"
-#include "misc.hpp"
+#include "operateur.hpp"
 
 
 class light:public movable
@@ -18,23 +18,12 @@ public:
 
 	void draw();
 
-	// Keep track of where the camera is so bitmap can be oriented
-	// properly.
 	camera *viewer;  
 
-	
-	//objloader *lightobj;
-
-
-	/** Currently lights aren't directional, so only keep a vector of
-		 position and orientation doesn't matter.
-		vector3f *position;
-	*/
 	GLfloat Ka[4];	// Ambient 
 	GLfloat Kd[4];	// Diffuse
-	GLfloat Ks[4]; // Specular
+	GLfloat Ks[4];    // Specular
 
-	/// From 0-7 (or how ever many lights can be handled at once).
 	int GL_LIGHTX;
 };
 

@@ -11,7 +11,7 @@ Projet IGR204 - Lena Petersen, Shane Nana Yemming, Maud Buffier
 
 #include "main.hpp"
 #include "body.hpp"
-#include "misc.hpp"
+#include "operateur.hpp"
 #include "camera.hpp"
 #include "light.hpp"
 
@@ -80,6 +80,7 @@ int main(int argc, char* argv[])
 	light2->Kd[2] = 0.3f;
 	
 	vector<light*> lights;
+
 	lights.push_back(light1);
 	lights.push_back(light2);
 	
@@ -103,7 +104,7 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
-// Definition of the window GL and SDL
+// Definition of the windows GL and SDL
 void initGL(int width, int height)	       
 {	
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -151,6 +152,7 @@ void initSDL(int width, int height)
 
 }
 
+// Update the drawing every time mainLoop() is called
 void update()					
 {
 	using namespace m;
@@ -163,10 +165,7 @@ void update()
 	}
 	
 	if ( (updateNewCount - updateOldCount) > updateTimeMs ) {
-		theCamera->update();
-	
 		SDL_GetRelativeMouseState(&relMouseX,&relMouseY);
-		
 		pitch = 0;
 		turn = 0;
 		roll = 0;
@@ -182,7 +181,7 @@ void update()
 		}
 			
 		theCamera->move(pitch,turn,roll,m::x,m::y,z);
-		draw();
+		draw() ;
 		updateOldCount = updateNewCount;
 	}	
 }
@@ -190,7 +189,6 @@ void update()
 //Draw the body
 void draw()
 {
-	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glPushMatrix();
 	m::theCamera->look();
@@ -207,7 +205,7 @@ void draw()
 	glPopMatrix();
 }
 
-// Handle the mouse moves
+// Handle the mouse movements
 void handleInput(SDL_Event *E)
 {
 	using namespace m;
@@ -265,10 +263,11 @@ void terminateApp(void)
         return;
 }
 
+// Call the function to handle the mouse and update() 
 int mainLoop()
 {
 	bool isProgramLooping = true;			
-	SDL_Event E;
+	SDL_Event E ;
 
 	while(isProgramLooping)
 	{

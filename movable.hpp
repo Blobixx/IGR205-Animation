@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "misc.hpp"
+#include "operateur.hpp"
 
 #define ROTATE_SLOWNESS 8
 #define MOVE_INC  1.4f
@@ -21,12 +21,12 @@ public:
 
 	movable& operator= (const movable& other);
 
+	// Function for every movable
 	virtual void draw();
 	virtual void update();
-
 	void move(int pitch, int turn, int roll, float x, float y, float z);
 
-	/// state variables
+	// State variables
 	matrix16f location, newLocation;
 };
 

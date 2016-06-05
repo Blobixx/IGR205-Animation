@@ -3,7 +3,7 @@ CPP = g++
 
 CIBLE = bioviewer
 
-SRCS =  misc.cpp camera.cpp light.cpp body.cpp bvh.cpp main.cpp movable.cpp
+SRCS =  operateur.cpp camera.cpp light.cpp body.cpp bvh.cpp main.cpp movable.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 SDL_CFLAGS := $(shell sdl-config --cflags)

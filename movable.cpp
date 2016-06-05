@@ -7,7 +7,7 @@
 
 #include <GL/gl.h>												
 
-#include "misc.hpp"
+#include "operateur.hpp"
 #include "movable.hpp"
 
 using namespace std;

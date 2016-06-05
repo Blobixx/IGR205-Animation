@@ -6,7 +6,7 @@
 #include <GL/gl.h>	
 #include <GL/glu.h>	
 
-#include "misc.hpp"
+#include "operateur.hpp"
 #include "movable.hpp"
 #include "camera.hpp"
 

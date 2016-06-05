@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "misc.hpp"
+#include "operateur.hpp"
 #include "bvh.hpp"
 #include "main.hpp"
 
@@ -16,14 +16,16 @@ bvhPart::bvhPart()
 {
 }
 
+//Function reading the file using init
 bvh::bvh(string bvhFile)
 {
 	init(bvhFile); 
 	return;
 }
 
+// Read and process every line of the file
 void bvh::process(string line)
-{	
+{
 	if (line == "OFFSET") {
 		vertIndex = 0;	
 		theMode = OFFSET;
@@ -31,14 +33,13 @@ void bvh::process(string line)
 		root = new bvhPart;
 		root->parent = NULL;
 		current = root;
-			
 		theMode = ROOT;
 	} else if (line == "{") {
 			
 	} else if (line == "}") { 
 			if (current != root) { 
 				current = current->parent;
-		       		theMode = NONE;
+		       	theMode = NONE;
 			}
 	} else if (line == "JOINT") {
 		bvhPart *temp = new bvhPart;
@@ -70,25 +71,18 @@ void bvh::process(string line)
 			case (ROOT):
 				root->name = line;
 				theMode = NONE;
-			break;
+				break;
 
 			case (JOINT): 
-			break ;
+				break ;
 			
 			case (OFFSET):
 				current->offset.vertex[vertIndex] = atof(line.c_str());
 				vertIndex++;
-				if (vertIndex >2) {
-					vertIndex = 0;
-					theMode = NONE;
-				}
-			break;
+				break;
 
 			case (CHANNELS):
-				// assume channelsNum == 0 in the .bvh .is impossible
-				if (channelsNum == 0) {
-					channelsNum = atoi(line.c_str());
-				} else if (line == "Xposition") {		
+				if (line == "Xposition") {		
 					current->channels.push_back(bvhPart::Xpos);	
 				} else if (line == "Yposition") {					
 					current->channels.push_back(bvhPart::Ypos);	
@@ -102,17 +96,11 @@ void bvh::process(string line)
 					current->channels.push_back(bvhPart::Xrot);				
 				}
 				
-				// if there are additional channel types in error, they'll be ignored(?)
-				if (current->channels.size() == channelsNum) {
-					theMode = NONE;
-					channelsNum = 0;
-				}
 				break;
 
 			case (Frames):
 				framesNum = atoi(line.c_str());
 				theMode = NONE;
-			
 				break;
 
 			case (Frame):
@@ -123,7 +111,6 @@ void bvh::process(string line)
 				theMode = MOTIONDATA;
 				current = root;
 				recurs(root);
-
 				break;
 
 			case (MOTIONDATA):
@@ -143,29 +130,22 @@ void bvh::process(string line)
 						channelIndex++;
 						break;
 					case (bvhPart::Zrot):
-						// it seems like some limbs need a negative, and out
-						// limbs don't
 						tempMotionZ.RotateZ((float)-DEG_TO_RAD(atof(line.c_str())));
 						channelIndex++;
 						break;
 					case (bvhPart::Yrot):
-						//if (partIndex == 3) cout << atof(line.c_str()) << "\n";
 						tempMotionY.RotateY((float)-DEG_TO_RAD(atof(line.c_str())));
-						//tempMotion.print();
 						channelIndex++;
 						break;
 					case (bvhPart::Xrot):
-						//if (partIndex == 3) cout << atof(line.c_str()) << "\n";
 						tempMotionX.RotateX((float)-DEG_TO_RAD(atof(line.c_str())));	
 						channelIndex++;
 						break;
 				}
 				
 				if (channelIndex >= bvhPartsLinear[partIndex]->channels.size()) {
-					// store tempMotion and move to next part
 					tempMotion = tempMotion * (tempMotionZ *tempMotionX * tempMotionY );
 					bvhPartsLinear[partIndex]->motion.push_back(tempMotion);
-					//tempMotion.print();
 					
 					tempMotion.LoadIdentity();
 					tempMotionX.LoadIdentity();
@@ -177,7 +157,6 @@ void bvh::process(string line)
 					partIndex++;
 				}	
 				if (partIndex >= bvhPartsLinear.size()) {
-					// this should be the end of one line of motion data
 					partIndex = 0;
 				}	
 				
@@ -191,6 +170,7 @@ void bvh::process(string line)
 	}
 }
 
+// Create the bvhPartsLinear and the motion0 (with the offset) for every bvhPart
 void bvh::recurs(bvhPart* some)
 {
 	matrix16f motion0;
@@ -205,11 +185,12 @@ void bvh::recurs(bvhPart* some)
 		recurs(some->child[i]);				
 }
  
+// Read the file line per line thanks to process() 
 void bvh::init(string bvhFile)
 {
 	data = 0;
-	partIndex = 0;
-	channelIndex = 0;	
+	partIndex = 0 ;
+	channelIndex = 0 ;	
 
 	tempMotion.LoadIdentity();
 	tempMotionX.LoadIdentity();
@@ -227,7 +208,6 @@ void bvh::init(string bvhFile)
 	for (i =0; i< lines.size(); i++) {
 		process(lines[i]);
 	}
-	
 	bvhStream.close();
 	
 	framesNum = bvhPartsLinear[0]->motion.size();	

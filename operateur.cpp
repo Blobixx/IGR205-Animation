@@ -1,139 +1,15 @@
-/*****************************************************************************
-
-	bioviewer
-		
-    Copyright (C) 2002  Lucas Walter
-
-  	lucasw@u.washington.edu
-	http://students.washington.edu/lucasw
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-
-  thanks to Trent Polack (ShiningKnight)
-	for the tutorial
-
-******************************************************************************/
-
 #ifdef WIN32												
 #include <windows.h>											
-#endif
-																	
-//#include <stdio.h>											
-//#include <stdlib.h>											
+#endif										
 
 #include <iostream>
 
 #include <GL/gl.h>					
 #include <GL/glu.h>															
-//#include <SDL.h>
 
 #include <math.h>
 
-#include "misc.hpp"
-
-
-/*
-void CreateRenderTexture(UINT textureArray[], int size, int channels, int type, int textureID)		
-{
-	// Create a pointer to store the blank image data
-	unsigned int *pTexture = NULL;											
-
-	// We need to create a blank texture to render our dynamic texture too.
-	// To do this, we just create an array to hold the data and then give this
-	// array to OpenGL.  The texture is stored on the video card so we can
-	// destroy the array immediately afterwards.
-	// This function takes the texture array to store the texture, the
-	// size of the texture for width and the heigth, the channels (1, 3 or 4),
-	// the type (LUMINANCE, RGB, RGBA, etc..) and the texture ID to assign it too.
-
-	// Allocate and init memory for the image array and point to it from pTexture
-	pTexture = new unsigned int [size * size * channels];
-	memset(pTexture, 0, size * size * channels * sizeof(unsigned int));	
-
-	// Register the texture with OpenGL and bind it to the texture ID
-	glGenTextures(1, &textureArray[textureID]);								
-	glBindTexture(GL_TEXTURE_2D, textureArray[textureID]);					
-	
-	// Create the texture and store it on the video card
-	glTexImage2D(GL_TEXTURE_2D, 0, channels, size, size, 0, type, GL_UNSIGNED_INT, pTexture);						
-	
-	// Set the texture quality
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-
-	// Since we stored the texture space with OpenGL, we can delete the image data
-	delete [] pTexture;																					
-}
-
-void CreateTexture(UINT textureArray[],char *strFileName,int textureID)
-{
-    SDL_Surface *pBitmap[1];
-
-    if( strFileName == NULL )                       
-        return ;
-
-  
-    pBitmap[0] = SDL_LoadBMP(strFileName);             
-
-    if(pBitmap[0] == NULL)                               
-    {
-			fprintf(stderr, " Failed loading %s\n",  SDL_GetError() );
-		exit(1);        
-    }
-
-    // Generate a texture with the associative texture ID stored in the array
-    glGenTextures(1, &textureArray[textureID]);
-
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-//	glPixelStorei (GL_UNPACK_ALIGNMENT, 0);
-
-    // Bind the texture to the texture arrays index and init the texture
-    glBindTexture(GL_TEXTURE_2D, textureArray[textureID]);
-
-	// Build Mipmaps (builds different versions of the picture for distances - looks better)
-    gluBuild2DMipmaps(GL_TEXTURE_2D, 3, pBitmap[0]->w, 
-		pBitmap[0]->h, GL_BGR_EXT , GL_UNSIGNED_BYTE, pBitmap[0]->pixels);
-
-
-    // Lastly, we need to tell OpenGL the quality of our texture map.  GL_LINEAR is the smoothest.    
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR | GL_LINEAR_MIPMAP_NEAREST);    
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
-
-	
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, pBitmap[0]->w, pBitmap[0]->h, 0,
-					GL_BGR_EXT, GL_UNSIGNED_BYTE, pBitmap[0]->pixels);
-
-
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR );    
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR );
-*/
-/*
-
-    // The default GL_TEXTURE_WRAP_S and ""_WRAP_T property is GL_REPEAT.
-    // We need to turn this to GL_CLAMP, otherwise it creates ugly seems
-    // in our sky box.  GL_CLAMP does not repeat when bound to an object.
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-
-    // Now we need to free the bitmap data that we loaded since openGL stored it as a texture
-    
-    SDL_FreeSurface(pBitmap[0]);                        // Free the texture data we dont need it anymore
-}
-*/
+#include "operateur.hpp"
 
 void Normal(vector3f* v1, vector3f* v2, vector3f* v3)
 {
@@ -246,23 +122,6 @@ void vector3f::Set(float x,float y, float z)
 	vertex[2]=z;
 }
 
-/*
-void vector3f::Eq(vector3f *other)
-{
-	vertex[0]=other->vertex[0];
-	vertex[1]=other->vertex[1];
-	vertex[2]=other->vertex[2];
-
-}*/
-
-/*vector3f operator= (const vector3f &v1, const vector3f &v2)
-{
-
-	v1.vertex[0] = v2.vertex[0];
-	v1.vertex[1] = v2.vertex[1];
-	v1.vertex[2] = v2.vertex[2];
-}*/
-
 vector3f& vector3f::operator=(const vector3f &v1)
 {
 	vertex[0] =v1.vertex[0];
@@ -274,10 +133,6 @@ vector3f& vector3f::operator=(const vector3f &v1)
 
 bool operator== (const vector3f &v1, const vector3f &v2)
 {
-/*	return ((v1.vertex[0]/v2.vertex[0] > .95) && (v1.vertex[0]/v2.vertex[0] < 1.05) &&
-			(v1.vertex[0]/v2.vertex[1] > .95) && (v1.vertex[0]/v2.vertex[1] < 1.05) &&
-			(v1.vertex[0]/v2.vertex[2] > .95) && (v1.vertex[0]/v2.vertex[2] < 1.05)		);
-*/
 	return ((v1.vertex[0] == v2.vertex[0]) && 
 		    (v1.vertex[1] == v2.vertex[1]) &&
 		    (v1.vertex[2] == v2.vertex[2])); 
@@ -335,19 +190,7 @@ vector3f operator+ (const vector3f &v1, const float scalar)
 
 	return result;
 }
-/*
-vector3f operator+= (const vector3f &v1)
-{
-	//vector3f result(0.0f, 0.0f, 0.0f);
 
-	vertex[0] += v1.vertex[0];
-	vertex[1] += v1.vertex[1];
-	vertex[2] += v1.vertex[2];
-
-	return result;
-}
-
-*/
 vector3f operator- (const vector3f &v1, const vector3f &v2)
 {
 	vector3f result(0.0f, 0.0f, 0.0f);
@@ -417,29 +260,6 @@ vector3f operator/ (const vector3f &v1, const float scalar)
 	return result;
 }
 
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-/*
-
-OpengGL compatible matrix:
-
-float[16]
-[0 4 8  12]
-[1 5 9  13]
-[2 6 10 14]
-[3 7 11 15]
-
-[rightX upX	outX	X]
-[rightY upY outY	Y]
-[rightZ	upZ	outZ	Z]
-[0		0	0		1]
-
-*/
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 void matrix16f::LoadZero(void)
 {
 	int loop;
@@ -461,8 +281,6 @@ void matrix16f::Translate(float x, float y, float z)
         this->matrix[12]=(this->matrix[0]*x)+(this->matrix[4]*y)+(this->matrix[8] *z)+(this->matrix[12]);
         this->matrix[13]=(this->matrix[1]*x)+(this->matrix[5]*y)+(this->matrix[9] *z)+(this->matrix[13]);
         this->matrix[14]=(this->matrix[2]*x)+(this->matrix[6]*y)+(this->matrix[10]*z)+(this->matrix[14]);
-//      this->matrix[15]=(this->matrix[3]*x)+(this->matrix[7]*y)+(this->matrix[11]*z)+(this->matrix[15]);
-
 }
 
 void matrix16f::Scale(float x, float y, float z)
@@ -472,9 +290,6 @@ void matrix16f::Scale(float x, float y, float z)
 			matrix[10] *= z;
 }
 				 
-
-
-// current uses only 3x3 orientation portion, not location triple
 vector3f matrix16f::Transform(vector3f point)
 {
 
@@ -528,10 +343,6 @@ void matrix16f::print()
 		<< matrix[2] << "\t" << matrix[6] << "\t" << matrix[10]<< "\t" << matrix[14] << "\n\n";
 }
 
-// 1	0		 0		0 
-// 0	cos(x) -sin(x)	0  
-// 0	sin(x)  cos(x)	0  
-// 0	0		 0		1 
 void matrix16f::RotateX(int deg)
 {
 	float tempX = this->matrix[12];
@@ -555,13 +366,6 @@ void matrix16f::RotateX(int deg)
 	this->matrix[14] = tempZ;
 } 
 
-
-
-// rotate about y-axis about center of this, not origin
-// cos(x)	0	sin(x)	0 
-// 0		1	 0		0
-//-sin(x)	0	cos(x)	0  
-// 0		0	 0		1 
 void matrix16f::RotateY(int deg)
 {
 	float tempX = this->matrix[12];
@@ -586,12 +390,6 @@ void matrix16f::RotateY(int deg)
 	this->matrix[14] = tempZ;
 } 
 
-
-// rotate about x-axis about center of this, not origin
-// cos(x) -sin(x)	0	0 
-// sin(x)  cos(x)	0	0  
-// 0		0		1	0
-// 0		0		0	1 
 void matrix16f::RotateZ(int deg)
 {
 	float tempX = this->matrix[12];
@@ -615,13 +413,6 @@ void matrix16f::RotateZ(int deg)
 	this->matrix[14] = tempZ;
 } 
 
-
-
-
-// 1	0		 0		0 
-// 0	cos(x) -sin(x)	0  
-// 0	sin(x)  cos(x)	0  
-// 0	0		 0		1 
 void matrix16f::RotateX(float rad)
 {
 	float tempX = this->matrix[12];

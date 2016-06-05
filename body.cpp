@@ -34,17 +34,14 @@ void body::update()
 void body::draw()
 {
 	glPushMatrix();
-	
 	recursDraw(theBvh->root);
-
 	glPopMatrix();
 }
-
 
 void body::recursDraw(bvhPart* part)
 {
 	// motion[0] holds the offset for every bvhPart, orient.top is the orientation of the parent
-	matrix16f ident = orient.top() * part->motion[0];
+	matrix16f ident = orient.top()*part->motion[0];
 	
 	// Translate every part according to the counter and the position of the bvhPart
 	ident.Translate( part->motion[counter].matrix[12], part->motion[counter].matrix[13], part->motion[counter].matrix[14]);
@@ -66,7 +63,7 @@ void body::recursDraw(bvhPart* part)
 		glBegin(GL_LINES);
 		// The origin is the parent part, we draw a line from this point to the offset
 		glVertex3f( 0,0,0 );
-		glVertex3fv( offset.vertex );
+		glVertex3fv(offset.vertex);
 		glEnd();
 		glPopMatrix();
 	

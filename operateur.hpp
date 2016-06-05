@@ -1,5 +1,5 @@
-#ifndef misc_H
-#define misc_H
+#ifndef operateur_H
+#define operateur_H
 
 
 #include <memory.h>
@@ -8,27 +8,12 @@
 #define PI 3.141593 
 #define DEG_TO_RAD(deg) ((float)(deg)*PI/180)
 
-//static void swap(unsigned char & a, unsigned char & b);
-//void CreateRenderTexture(unsigned int textureArray[], int size, int channels, int type, int textureID);
-//void CreateTexture(unsigned int textureArray[],char *strFileName,int textureID);
+// Classes which define vector3f, matrix16 and matrix9 with their operateur
 
-
-/// Three floats in a array, lots of overloaded operators
-/**
-	The basis of every 3D app, I'm sure there are some good standard
-	implementation (like on boost.org?) but it's a good exercise for 
-	the initiate to do it themselves so they understand it inside and
-	out (and then promptly forget about it once it works).
-
-	I might switch to a standard library, but it's nice to simply
-	add my own additional functions and operators right here.
-
- */
 class vector3f
 {
 public:
 
-	// all memset does is initialize the vertices to zero.
 	vector3f()
 	{	memset(vertex, 0, sizeof(float[3]));	}
 
@@ -73,16 +58,6 @@ public:
 	void Set(float x,float y,float z);
 };
 
-// gcc wasn't liking this as friend
-//float dot(const vechttp://sdldoc.csn.ul.ie/sdlkey.phptor3f &v1, const vector3f &v2);
-
-/// Array of 16 floats in OpenGL conformant style 
-/**
-	Plenty of useful  overloaded operators,
-	including those for interacting with the matrix9f
-	and vector3f classes.
- 
- */
 class matrix16f
 {
 public:
@@ -132,13 +107,6 @@ public:
 		{	memset(matrix, 0, sizeof(float[16]));	}
 };
 
-
-/// Smaller matrix for storing orientation but no location information.
-/**
-
-	The contents are puhttp://sdldoc.csn.ul.ie/sdlkey.phpblic for now.
-
-  */
 class matrix9f
 {
 public:

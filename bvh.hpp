@@ -7,12 +7,11 @@
 #include <string>
 #include <vector>
 
-#include "misc.hpp"
+#include "operateur.hpp"
 
 using namespace std;
 
-class ChannelError;
-
+// Every bvh is composed with several bvhPart
 class bvhPart 
 {
 	
@@ -20,61 +19,48 @@ public:
 	enum channelTypes {Xpos,Ypos,Zpos,Zrot,Xrot,Yrot};
 	
 	bvhPart();
-
 	string name;
-
-	vector3f offset;
+	vector3f offset ;
+	// A matrix to describe the movement of the part
+	vector<matrix16f> motion ;
 	
-	vector<matrix16f> motion;
-	
-	bvhPart* parent;
-	vector<channelTypes> channels;
-	vector<bvhPart*> child;
+	bvhPart* parent ;
+	vector<channelTypes> channels ;
+	//Children from this part
+	vector<bvhPart*> child ;
 };
-
 
 class bvh 
 {
 	enum mode {NONE,OFFSET,CHANNELS,JOINT,ROOT,End,Site,MOTION,Frames,Frame,Time,MOTIONDATA};
 
-	public:
+public:
 	bvhPart *root;
 	float frameTime;
+	int framesNum;
+
+	bvh(string bvhFile);
+	void recurs(bvhPart* some);
+	void process(string line);
+	void init(string bvhFile);
 
 private:
 
-	// mostly used just for init/processing- what to do?
-	// Have another class with just essential data structures
-	// that uses a processing class and then deletes it- more mem efficient
-	bvhPart *current;
+	bvhPart *current ;
+	// Here are the different part of the body
 	vector <bvhPart*> bvhPartsLinear;
 	
       mode theMode;
 	int vertIndex;
-	
 	unsigned channelIndex;
 	unsigned partIndex;
-
-	
-
-	int data;	
-	/// the channels vector will store it's own size, so this is just for error checking.
+	int data;
 	unsigned channelsNum;	
-	
 	
 	matrix16f tempMotion;
 	matrix16f tempMotionY;
 	matrix16f tempMotionX;
 	matrix16f tempMotionZ;
-
-public:
-	bvh(string bvhFile);
-
-	int framesNum;
-
-	void recurs(bvhPart* some);
-	void process(string line);
-	void init(string bvhFile);
  
 };
 
