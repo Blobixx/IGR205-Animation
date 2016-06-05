@@ -21,7 +21,6 @@ light::light()
 
 light::light(camera *viewer, int GL_LIGHTX)
 {
-	verbose = false;
 
 	this->viewer = viewer;
 

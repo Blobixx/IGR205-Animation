@@ -15,7 +15,6 @@ class movable
 public:
 	
 	movable();
-	movable(string name);
 	virtual ~movable();
 
 	void init();
@@ -27,12 +26,8 @@ public:
 
 	void move(int pitch, int turn, int roll, float x, float y, float z);
 
-	void setName(string name);
-
-	/// state variable
+	/// state variables
 	matrix16f location, newLocation;
-
-	string name;
 };
 
 #endif // movable_H

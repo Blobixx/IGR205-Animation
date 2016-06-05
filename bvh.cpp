@@ -163,7 +163,7 @@ void bvh::process(string line)
 				
 				if (channelIndex >= bvhPartsLinear[partIndex]->channels.size()) {
 					// store tempMotion and move to next part
-					tempMotion = tempMotion * (tempMotionZ *tempMotionX * tempMotionY );// * tempMotionY);
+					tempMotion = tempMotion * (tempMotionZ *tempMotionX * tempMotionY );
 					bvhPartsLinear[partIndex]->motion.push_back(tempMotion);
 					//tempMotion.print();
 					

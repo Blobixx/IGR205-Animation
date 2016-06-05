@@ -9,7 +9,7 @@
 
 class body : public movable
 {
-
+	//Recursive function to draw the body part by part
 	void recursDraw(bvhPart *part);
 	
 	stack<matrix16f> orient;
@@ -18,13 +18,13 @@ public:
 	body(string bvhFile);
 	~body();
 
+	// Position in the animation
 	unsigned counter;
 
-	bvh *theBvh;	
-	void draw(void);
-
-	void update(void);
-	void update(int counterOffset);
+	bvh *theBvh;
+	
+	void draw();
+	void update();
 	
 	vector<light*> lights;
 };

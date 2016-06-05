@@ -17,15 +17,8 @@ movable::movable()
 	init();
 }
 
-movable::movable(string name)
-{
-	setName(name);
-	init();
-}
-
 movable::~movable()
 {
-	
 }
 
 void movable::init()
@@ -40,21 +33,11 @@ movable& movable::operator= (const movable& other)
 	return *this;
 }
 
-
-void movable::setName(string name)
-{
-	
-	location.LoadIdentity();
-	location.matrix[10] = -1.0f; 
-	this->name = name;
-}
-
-
 void movable::draw()
 {
 }
 
-void movable::update(void)
+void movable::update()
 {
 }
 
@@ -69,7 +52,6 @@ void movable::move(int pitch, int turn, int roll, float x, float y, float z)
 	if (roll != 0)
 		location.RotateZ(roll/ROTATE_SLOWNESS);
 
-	
 	location.Translate(x,y,z);
 
 	newLocation = location;

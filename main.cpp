@@ -61,12 +61,11 @@ int main(int argc, char* argv[])
 	height = 300;
 	
 	// Definition of the camera
-	theCamera = new camera("cam1");
+	theCamera = new camera();
 	theCamera->move(0,0,0,10.0f,20.0f,-103.0f) ;
 	
 	// Definition of 2 lights
 	light1 = new light(theCamera,GL_LIGHT1); 
-	light1->setName("light 1");
 	light1->move(0,0,0,100.0f,15.0f,70.3f);
 
 	light1->Kd[0] = 1.0f;
@@ -74,7 +73,6 @@ int main(int argc, char* argv[])
 	light1->Kd[2] = 0.2f;
 	
 	light2 = new light(theCamera,GL_LIGHT2);
-	light2->setName("light 2");
 	light2->move(0,0,0,-150.0f,55.0f,20.3f);
 	
 	light2->Kd[0] = 1.0f;
@@ -153,7 +151,7 @@ void initSDL(int width, int height)
 
 }
 
-void update(Uint32 ms)					
+void update()					
 {
 	using namespace m;
 	
@@ -288,7 +286,7 @@ int mainLoop()
 			}
 		} 
 		else {
-			update(0);
+			update();
 		}	
 	}
 	return 0;		
