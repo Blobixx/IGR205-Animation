@@ -5,12 +5,11 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-
 #include "body.hpp"
 #include "main.hpp"
 
 // Create the body using the BVH constructor
-body::body(string bvhFile = "Take 006.bvh")
+body::body(QString* bvhFile = new QString("Take 006.bvh"))
 {
 	counter = 1;
 	theBvh = new bvh(bvhFile); 
@@ -36,9 +35,9 @@ void body::update()
 // Draw the body using recursDraw
 void body::draw()
 {
-	glPushMatrix();
+    glPushMatrix();
 	recursDraw(theBvh->root);
-	glPopMatrix();
+    glPopMatrix() ;
 }
 
 void body::recursDraw(bvhPart* part)
@@ -61,20 +60,29 @@ void body::recursDraw(bvhPart* part)
 		// Give the offset of the child
 		vector3f offset = part->child[i]->offset;
 
+        cout << i << endl ;
+
         if (part->child[i]->child.size() == 0){
             glColor3f(0.0f,0.0f,1.0f);
         }
         else{
             glColor3f(0.0f,1.0f,0.0f);
         }
-
-        glPushMatrix();
+        glBegin(GL_QUADS);
+            glVertex3f(-1.0f, 1.0f, 0.0f);
+            glVertex3f(-1.0f, -1.0f, 0.0f);
+            glVertex3f(1.0f, -1.0f, 0.0f);
+            glVertex3d(1.0f, 1.0f, 0.0f);
+        glEnd();
+        /*
+        //glPushMatrix();
         glBegin(GL_LINES);
 		// The origin is the parent part, we draw a line from this point to the offset
 		glVertex3f( 0,0,0 );
         glVertex3fv(offset.vertex);
 		glEnd();
-        glPopMatrix();
+        //glPopMatrix();*/
+
 	
         if (part->child[i]->child.size() != 0){
             recursDraw(part->child[i]);

@@ -16,7 +16,7 @@ class body : public movable
 
 
 public:
-	body(string bvhFile);
+    body(QString* bvhFile);
 	~body();
 
 	// Position in the animation

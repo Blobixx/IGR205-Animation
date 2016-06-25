@@ -6,6 +6,7 @@
 #include <iterator>
 #include <string>
 #include <vector>
+#include <QString>
 
 #include "operateur.hpp"
 
@@ -19,7 +20,7 @@ public:
 	enum channelTypes {Xpos,Ypos,Zpos,Zrot,Xrot,Yrot};
 	
 	bvhPart();
-	string name;
+    QString name;
 	vector3f offset ;
 	// A matrix to describe the movement of the part
 	vector<matrix16f> motion ;
@@ -39,10 +40,10 @@ public:
 	float frameTime;
 	int framesNum;
 
-	bvh(string bvhFile);
+    bvh(QString* bvhFile);
 	void recurs(bvhPart* some);
-	void process(string line);
-	void init(string bvhFile);
+    void process(QString line);
+    void init(QString* bvhFile);
 
 private:
 

@@ -49,13 +49,13 @@ myWindow::myWindow(QWidget *parent)
 
     timer.start();
     // Definition of the file
-    string bvhFile;
+    QString* bvhFile;
     using namespace m;
 /*
     if (argc > 1)
         bvhFile = argv[1];
     else*/
-        bvhFile ="Take 006.bvh";
+        bvhFile = new QString("Take 006.bvh");
 
 
     int width = 500;
@@ -161,6 +161,8 @@ void myWindow::paintGL()
     glEnd();*/
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
     glPushMatrix();
     m::theCamera->look();
 

@@ -3,6 +3,7 @@
 #include <iterator>
 #include <string>
 #include <vector>
+#include <QTextStream>
 
 #include "operateur.hpp"
 #include "bvh.hpp"
@@ -15,14 +16,14 @@ bvhPart::bvhPart()
 }
 
 //Function reading the file using init
-bvh::bvh(string bvhFile)
+bvh::bvh(QString* bvhFile)
 {
 	init(bvhFile); 
 	return;
 }
 
 // Read and process every line of the file
-void bvh::process(string line)
+void bvh::process(QString line)
 {
 	if (line == "OFFSET") {
 		vertIndex = 0;	
@@ -75,7 +76,7 @@ void bvh::process(string line)
 				break ;
 			
 			case (OFFSET):
-				current->offset.vertex[vertIndex] = atof(line.c_str());
+                current->offset.vertex[vertIndex] = atof(line.toStdString().c_str());
 				vertIndex++;
 				break;
 
@@ -97,7 +98,7 @@ void bvh::process(string line)
 				break;
 
 			case (Frames):
-				framesNum = atoi(line.c_str());
+                framesNum = atoi(line.toStdString().c_str());
 				theMode = NONE;
 				break;
 
@@ -105,7 +106,7 @@ void bvh::process(string line)
 				break;
 
 			case (Time):
-				frameTime = atof(line.c_str());
+                frameTime = atof(line.toStdString().c_str());
 				theMode = MOTIONDATA;
 				current = root;
 				recurs(root);
@@ -116,27 +117,27 @@ void bvh::process(string line)
 				data++;
 				switch (bvhPartsLinear[partIndex]->channels[channelIndex]) {
 					case (bvhPart::Xpos):	
-						tempMotion.Translate(atof(line.c_str()),0,0);	
+                        tempMotion.Translate(atof(line.toStdString().c_str()),0,0);
 						channelIndex++;
 						break;
 					case (bvhPart::Ypos):
-						tempMotion.Translate(0,atof(line.c_str()),0);
+                        tempMotion.Translate(0,atof(line.toStdString().c_str()),0);
 						channelIndex++;
 						break;
 					case (bvhPart::Zpos):
-						tempMotion.Translate(0,0,atof(line.c_str()));
+                        tempMotion.Translate(0,0,atof(line.toStdString().c_str()));
 						channelIndex++;
 						break;
 					case (bvhPart::Zrot):
-						tempMotionZ.RotateZ((float)-DEG_TO_RAD(atof(line.c_str())));
+                        tempMotionZ.RotateZ((float)-DEG_TO_RAD(atof(line.toStdString().c_str())));
 						channelIndex++;
 						break;
 					case (bvhPart::Yrot):
-						tempMotionY.RotateY((float)-DEG_TO_RAD(atof(line.c_str())));
+                        tempMotionY.RotateY((float)-DEG_TO_RAD(atof(line.toStdString().c_str())));
 						channelIndex++;
 						break;
 					case (bvhPart::Xrot):
-						tempMotionX.RotateX((float)-DEG_TO_RAD(atof(line.c_str())));	
+                        tempMotionX.RotateX((float)-DEG_TO_RAD(atof(line.toStdString().c_str())));
 						channelIndex++;
 						break;
 				}
@@ -184,7 +185,7 @@ void bvh::recurs(bvhPart* some)
 }
  
 // Read the file line per line thanks to process() 
-void bvh::init(string bvhFile)
+void bvh::init(QString* bvhFile)
 {
 	data = 0;
 	partIndex = 0 ;
@@ -195,18 +196,27 @@ void bvh::init(string bvhFile)
 	tempMotionY.LoadIdentity();
 	tempMotionZ.LoadIdentity();
 
-	ifstream bvhStream(bvhFile.c_str());
+    //ifstream bvhStream(bvhFile.toStdString().c_str());
+    QTextStream bvhStream(bvhFile,QIODevice::ReadOnly);
 	
-	istream_iterator<string> bvhIt(bvhStream);
-	istream_iterator<string> sentinel;
+    //istream_iterator<string> bvhIt(bvhStream);
+    //istream_iterator<string> sentinel;
 
-	vector<string> lines(bvhIt,sentinel);
+    //vector<QString> lines(bvhIt,sentinel);
+    QString line;
+    while (!bvhStream.atEnd()){
+
+        line = bvhStream.readLine();
+        process(line);
+
+    }
 	
+    /*
 	unsigned i;
 	for (i =0; i< lines.size(); i++) {
 		process(lines[i]);
-	}
-	bvhStream.close();
+    }*/
+    //bvhStream.close();
 	
     //seg fault avec cette ligne ... :/
     //framesNum = bvhPartsLinear[0]->motion.size();
