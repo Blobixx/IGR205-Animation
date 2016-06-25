@@ -51,11 +51,11 @@ int main(int argc, char* argv[])
 	// Definition of the file
 	string bvhFile;
 	using namespace m;
-	
+
 	if (argc > 1)
 		bvhFile = argv[1];
 	else 
-		bvhFile ="Take 006.bvh";
+		bvhFile ="Take006.bvh";
 	
 	width = 400;
 	height = 300;
@@ -85,7 +85,9 @@ int main(int argc, char* argv[])
 	lights.push_back(light2);
 	
 	//Creation of the body
-	some = new body(bvhFile); 
+	some = new body(); 
+	some->compute(-30,-40,-45) ;
+	some->setBVHFile(bvhFile) ;
 	
 	some->lights = lights;
 	

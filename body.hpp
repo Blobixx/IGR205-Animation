@@ -6,6 +6,12 @@
 #include "movable.hpp"
 #include "bvh.hpp"
 #include "light.hpp"
+#include <math.h> 
+#include <iostream>
+#include <fstream>
+#include <string>
+ 
+using namespace std;
 
 class body : public movable
 {
@@ -15,7 +21,8 @@ class body : public movable
 	stack<matrix16f> orient;
 
 public:
-	body(string bvhFile);
+	void setBVHFile(string bvhFile) ;
+	body() ;
 	~body();
 
 	// Position in the animation
@@ -25,8 +32,13 @@ public:
 	
 	void draw();
 	void update();
+	matrix9f rotation; 
 	
 	vector<light*> lights;
+
+	void compute(float a, float b, float c);
+
+	matrix9f R1, R2,R3 ;
 };
 
 #endif //BODY_HPP
