@@ -78,105 +78,53 @@ void body::recursDraw(bvhPart* part)
 
 
 
-float computeRotation(float a, float b, float c) {
+vector3f body::computeRotation(float a, float b, float c) {
 
 //float xhip=45.1261,yhip= 41.6193,zhip= 0.1593;
+//float xfinal=51.9961,yfinal=26.9593,zfinal=1.8599;
 float xfinal=51.9961,yfinal=26.9593,zfinal=1.8599;
+
 float xshoulder=46.1861,yshoulder=56.9493,zshoulder=1.9193;
 
 vector3f eevector =vector3f(xfinal-xshoulder,yfinal-yshoulder,zfinal-zshoulder);
 vector3f goalvector=vector3f(a-xshoulder,b-yshoulder,c-zshoulder);
 vector3f axis=Cross(eevector,goalvector);
+
+float axisX = dot(axis, vector3f(1.0f,0.0f,0.0f)) ;
+float axisY = dot(axis, vector3f(0.0f,1.0f,0.0f)) ;
+float axisZ = dot(axis, vector3f(0.0f,0.0f,1.0f)) ;
+
+float eevectorX = dot(axis, vector3f(1.0f,0.0f,0.0f)) ;
+float eevectorY = dot(axis, vector3f(0.0f,1.0f,0.0f)) ;
+float eevectorZ = dot(axis, vector3f(0.0f,0.0f,1.0f)) ;
+
+float goalvectorX = dot(axis, vector3f(1.0f,0.0f,0.0f)) ;
+float goalvectorY = dot(axis, vector3f(0.0f,1.0f,0.0f)) ;
+float goalvectorZ = dot(axis, vector3f(0.0f,0.0f,1.0f)) ;
+
+matrix9f chgtBase ;
+chgtBase.matrix[0]=axisX; 
+chgtBase.matrix[1]=axisY ;
+chgtBase.matrix[2]=axisZ;
+chgtBase.matrix[3]= eevectorX;
+chgtBase.matrix[4]= eevectorY;
+chgtBase.matrix[5]= eevectorZ;
+chgtBase.matrix[6]= goalvectorX;
+chgtBase.matrix[7]= goalvectorY;
+chgtBase.matrix[8]= goalvectorZ;
+
 vector3f axisnorm=axis/axis.Length();
 
 float angle= acos(dot(eevector,goalvector)/(eevector.Length()*goalvector.Length()));
 
-/*matrix9f rotation;
-rotation.matrix[0]=pow(axisnorm.vertex[0],2)*(1-cos(angle))+cos(angle); 
-rotation.matrix[1]=axisnorm.vertex[0]*axisnorm.vertex[1]*(1-cos(angle))+axisnorm.vertex[2]*axisnorm.vertex[2] ;
-rotation.matrix[2]=axisnorm.vertex[0]*axisnorm.vertex[2]*(1-cos(angle))-axisnorm.vertex[1]*sin(angle);
-rotation.matrix[3]= axisnorm.vertex[0]*axisnorm.vertex[1]*(1-cos(angle))-axisnorm.vertex[2]*sin(angle);
-rotation.matrix[4]= axisnorm.vertex[1]*axisnorm.vertex[1]*(1-cos(angle))+cos(angle);
-rotation.matrix[5]= axisnorm.vertex[1]*axisnorm.vertex[2]*(1-cos(angle))+axisnorm.vertex[0]*sin(angle);
-rotation.matrix[6]= axisnorm.vertex[0]*axisnorm.vertex[2]*(1-cos(angle))+axisnorm.vertex[1]*sin(angle);
-rotation.matrix[7]= axisnorm.vertex[1]*axisnorm.vertex[2]*(1-cos(angle))-axisnorm.vertex[0]*sin(angle);
-rotation.matrix[8]= axisnorm.vertex[2]*axisnorm.vertex[2]*(1-cos(angle))+cos(angle);*/
+vector3f vectorAngle = vector3f(angle,0,0) ;
 
-return angle;
+vector3f resultat = chgtBase*vectorAngle ;
+
+return resultat;
 }
 
-void compute(float a, float b, float c){
-	/*matrix9f RotationHipsChestZ ;
-	RotationHipsChestZ.LoadIdentity() ; 
-	RotationHipsChestZ.RotateZ(-2.33) ;
-
-	matrix9f RotationHipsChestX ;
-	RotationHipsChestX.LoadIdentity() ; 
-	 RotationHipsChestX.RotateX(16.76) ;
-
-	matrix9f RotationHipsChestY ;
-	RotationHipsChestY.LoadIdentity() ; 
-	RotationHipsChestX.RotateX(-3.16) ;
-
-	matrix9f RotationChestLCollarZ ;
-	RotationChestLCollarZ.LoadIdentity() ; 
-	RotationChestLCollarZ.RotateZ(4.03) ;
-
-	matrix9f RotationChestLCollarX ;
-	RotationChestLCollarX.LoadIdentity() ; 
-	RotationChestLCollarX.RotateX(-0.14) ;
-
-	matrix9f RotationChestLCollarY ;
-	RotationChestLCollarY.LoadIdentity() ; 
-	RotationChestLCollarY.RotateY(6.35) ;
-
-	matrix9f RotationLCollarShoulderZ ;
-	RotationLCollarShoulderZ.LoadIdentity() ; 
-	RotationLCollarShoulderZ.RotateZ(-15.84) ;
-
-	matrix9f RotationLCollarShoulderX ;
-	RotationLCollarShoulderX.LoadIdentity() ; 
-	RotationLCollarShoulderX.RotateX(-47.99) ;
-
-	matrix9f RotationLCollarShoulderY ;
-	RotationLCollarShoulderY.LoadIdentity() ; 
-	RotationLCollarShoulderY.RotateY(-72.80) ;
-
-	matrix9f RotationShoulderElbowZ ;
-	RotationShoulderElbowZ.LoadIdentity() ; 
-	RotationShoulderElbowZ.RotateZ(-102.01) ;
-
-	matrix9f RotationShoulderElbowX ;
-	RotationShoulderElbowX.LoadIdentity() ; 
-	RotationShoulderElbowX.RotateX(-75.35) ;
-
-	matrix9f RotationShoulderElbowY ;
-	RotationShoulderElbowY.LoadIdentity() ; 
-	RotationShoulderElbowY.RotateY(-115.95) ;
-
-	matrix9f RotationElbowWristZ ;
-	RotationElbowWristZ.LoadIdentity() ; 
-	RotationElbowWristZ.RotateZ(15.03) ;
-
-	matrix9f RotationElbowWristX ;
-	RotationElbowWristX.LoadIdentity() ; 
-	RotationElbowWristX.RotateX(-3.9) ;
-
-	matrix9f RotationElbowWristY ;
-	RotationElbowWristY.LoadIdentity() ; 
-	RotationElbowWristY.RotateY(0.74) ;
-
-	matrix9f RotationWristEndZ ;
-	RotationWristEndZ.LoadIdentity() ; 
-	RotationWristEndZ.RotateZ(7.44) ;
-
-	matrix9f RotationWristEndX ;
-	RotationWristEndX.LoadIdentity() ; 
-	RotationWristEndX.RotateX(0.41) ;
-
-	matrix9f RotationWristEndY ;
-	RotationWristEndY.LoadIdentity() ; 
-	RotationWristEndY.RotateY(-0.79) ;*/
+void body::compute(float a, float b, float c){
 	
 	float R1Y=3.16-6.35+72.8+115.95;
 	float R1X=-16.76+0.14+47.99+75.35;
@@ -193,20 +141,18 @@ void compute(float a, float b, float c){
 	float R3Z=-7.44;
 	vector3f angle3=vector3f(R3X,R3Y,R3Z);
 
-	float angle=computeRotation(a,b,c);
-	
-vector3f angleVec = vector3f(angle,0,0) ;
+	vector3f angle=computeRotation(a,b,c);
 
-	vector3f move1=angleVec-angle1;
-	vector3f move2=angleVec-angle2;
-	vector3f move3=angleVec-angle3;
+	vector3f move1=angle-angle1;
+	vector3f move2=angle-angle2;
+	vector3f move3=angle-angle3;
    
     	ofstream flux("Take006.bvh",ios_base::app); // Flux d'ecriture
  
 
-            if(flux) // Si le lieu de destination existe ( j'entend par la le dossier )
+            if(flux) // Si le lieu de destination existe ( j'entend par la le fichier )
             {
-                flux << move1.vertex[0]<<move1.vertex[1] <<move1.vertex[2]<<move2.vertex[0]<<move2.vertex[1]<<move2.vertex[2]<<move3.vertex[0]<<move3.vertex[1]<<move3.vertex[2]<< "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"<<endl; 						// On ecrit dans le fichier de destination
+                flux <<"45.1261 41.6193 0.1593 -2.55 -4.82 -16.27 7.08 -4.90 1.08 -2.03 15.98 7.02 -4.72 -3.29 -0.10 -10.07 5.49 -20.86 2.47 7.37 -25.09 4.97 0.84 0.05 -2.33 16.76 -3.16 0.00 0.00 0.00 4.03 -0.14 6.35 -15.84 -47.99 -72.80"<<" "<< move1.vertex[0]<<" "<<move1.vertex[1]<<" "<<move1.vertex[2]<<" "<<move2.vertex[0]<<" "<<move2.vertex[1]<<" "<<move2.vertex[2]<<" "<<move3.vertex[0]<<" "<<move3.vertex[1]<<" "<<move3.vertex[2]<<" "<< "7.44 0.41 -0.79 -43.30 -29.41 -51.55 9.99 -65.35 38.75 -37.12 3.99 0.76 6.54 11.43 -23.87 5.11 -14.76 -22.61 "<<endl; 		// On ecrit dans le fichier de destination
             }                          // Et au passage on le créer si il n'existe pas
             else
             {
@@ -216,7 +162,7 @@ vector3f angleVec = vector3f(angle,0,0) ;
 }
 
 
-
+//7.44 0.41 -0.79 -43.30 -29.41 -51.55 9.99 -65.35 38.75 -37.12 3.99 0.76 6.54 11.43 -23.87 5.11 -14.76 -22.61 
 
 
 

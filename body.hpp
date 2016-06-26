@@ -37,6 +37,7 @@ public:
 	vector<light*> lights;
 
 	void compute(float a, float b, float c);
+	vector3f computeRotation(float a, float b, float c);
 
 	matrix9f R1, R2,R3 ;
 };
