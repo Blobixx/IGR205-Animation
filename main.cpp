@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
 	
 	//Creation of the body
 	some = new body(); 
-	some->compute(-25.0f,-45.0f,-30.0f) ;
+	some->computeAnimation(0.0f,0.0f,5.0f) ;
 	some->setBVHFile(bvhFile) ;
 	
 	some->lights = lights;

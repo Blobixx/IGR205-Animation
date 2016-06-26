@@ -8,8 +8,8 @@
 #include "body.hpp"
 #include "main.hpp"
 #include "operateur.hpp"
-// Create the body using the BVH constructor
 
+// Create the body using the BVH constructor
 body::body() {
 	counter = 1;
 
@@ -76,60 +76,58 @@ void body::recursDraw(bvhPart* part)
 	orient.pop();	
 }
 
-
-
+// compute the rotation for a destination
 vector3f body::computeRotation(float a, float b, float c) {
 
-//float xhip=45.1261,yhip= 41.6193,zhip= 0.1593;
-//float xfinal=51.9961,yfinal=26.9593,zfinal=1.8599;
-float xfinal=51.9961,yfinal=26.9593,zfinal=1.8599;
+	float xfinal=38.0061,yfinal=36.0493,zfinal=1.9193;
 
-float xshoulder=46.1861,yshoulder=56.9493,zshoulder=1.9193;
+	float xshoulder=38.0061,yshoulder=56.9493,zshoulder=1.9193;
 
-vector3f eevector =vector3f(xfinal-xshoulder,yfinal-yshoulder,zfinal-zshoulder);
-vector3f goalvector=vector3f(a-xshoulder,b-yshoulder,c-zshoulder);
-vector3f axis=Cross(eevector,goalvector);
+	vector3f eevector =vector3f(xfinal-xshoulder,yfinal-yshoulder,zfinal-zshoulder);
+	vector3f goalvector=vector3f(a-xshoulder,b-yshoulder,c-zshoulder);
+	vector3f axis=Cross(eevector,goalvector);
 
-float axisX = dot(axis, vector3f(1.0f,0.0f,0.0f)) ;
-float axisY = dot(axis, vector3f(0.0f,1.0f,0.0f)) ;
-float axisZ = dot(axis, vector3f(0.0f,0.0f,1.0f)) ;
+	float axisX = dot(axis, vector3f(1.0f,0.0f,0.0f)) ;
+	float axisY = dot(axis, vector3f(0.0f,1.0f,0.0f)) ;
+	float axisZ = dot(axis, vector3f(0.0f,0.0f,1.0f)) ;
 
-float eevectorX = dot(axis, vector3f(1.0f,0.0f,0.0f)) ;
-float eevectorY = dot(axis, vector3f(0.0f,1.0f,0.0f)) ;
-float eevectorZ = dot(axis, vector3f(0.0f,0.0f,1.0f)) ;
+	float eevectorX = dot(axis, vector3f(1.0f,0.0f,0.0f)) ;
+	float eevectorY = dot(axis, vector3f(0.0f,1.0f,0.0f)) ;
+	float eevectorZ = dot(axis, vector3f(0.0f,0.0f,1.0f)) ;
 
-float goalvectorX = dot(axis, vector3f(1.0f,0.0f,0.0f)) ;
-float goalvectorY = dot(axis, vector3f(0.0f,1.0f,0.0f)) ;
-float goalvectorZ = dot(axis, vector3f(0.0f,0.0f,1.0f)) ;
+	float goalvectorX = dot(axis, vector3f(1.0f,0.0f,0.0f)) ;
+	float goalvectorY = dot(axis, vector3f(0.0f,1.0f,0.0f)) ;
+	float goalvectorZ = dot(axis, vector3f(0.0f,0.0f,1.0f)) ;
 
-matrix9f chgtBase ;
-chgtBase.matrix[0]=axisX; 
-chgtBase.matrix[1]=axisY ;
-chgtBase.matrix[2]=axisZ;
-chgtBase.matrix[3]= eevectorX;
-chgtBase.matrix[4]= eevectorY;
-chgtBase.matrix[5]= eevectorZ;
-chgtBase.matrix[6]= goalvectorX;
-chgtBase.matrix[7]= goalvectorY;
-chgtBase.matrix[8]= goalvectorZ;
+	matrix9f chgtBase ;
+	chgtBase.matrix[0]=axisX; 
+	chgtBase.matrix[1]=axisY ;
+	chgtBase.matrix[2]=axisZ;
+	chgtBase.matrix[3]= eevectorX;
+	chgtBase.matrix[4]= eevectorY;
+	chgtBase.matrix[5]= eevectorZ;
+	chgtBase.matrix[6]= goalvectorX;
+	chgtBase.matrix[7]= goalvectorY;
+	chgtBase.matrix[8]= goalvectorZ;
 
-vector3f axisnorm=axis/axis.Length();
+	vector3f axisnorm=axis/axis.Length();
 
-float angle= acos(dot(eevector,goalvector)/(eevector.Length()*goalvector.Length()));
+	float angle= acos(dot(eevector,goalvector)/(eevector.Length()*goalvector.Length()));
 
-vector3f vectorAngle = vector3f(angle,0,0) ;
+	vector3f vectorAngle = vector3f(angle,0,0) ;
 
-vector3f resultat = chgtBase*vectorAngle ;
+	vector3f resultat = chgtBase*vectorAngle ;
 
-return resultat;
+	return resultat;
 }
 
+// write the rotation in the file
 void body::compute(float a, float b, float c){
 	
 	float R1Y=3.16-6.35+72.8+115.95;
 	float R1X=-16.76+0.14+47.99+75.35;
 	float R1Z=2.33-4.03+15.84+102.01;
-	vector3f angle1=vector3f(R1X,R1Y,R1Z);
+	vector3f angle1=vector3f(-R1X,R1Y,R1Z);
 
 	float R2X=3.9;
 	float R2Y=-0.74;
@@ -141,7 +139,7 @@ void body::compute(float a, float b, float c){
 	float R3Z=-7.44;
 	vector3f angle3=vector3f(R3X,R3Y,R3Z);
 
-	vector3f angle=computeRotation(a,b,c);
+	vector3f angle = computeRotation(a ,b ,c);
 
 	vector3f move1=angle-angle1;
 	vector3f move2=angle-angle2;
@@ -152,17 +150,35 @@ void body::compute(float a, float b, float c){
 
             if(flux) // Si le lieu de destination existe ( j'entend par la le fichier )
             {
-                flux <<"45.1261 41.6193 0.1593 -2.55 -4.82 -16.27 7.08 -4.90 1.08 -2.03 15.98 7.02 -4.72 -3.29 -0.10 -10.07 5.49 -20.86 2.47 7.37 -25.09 4.97 0.84 0.05 -2.33 16.76 -3.16 0.00 0.00 0.00 4.03 -0.14 6.35 -15.84 -47.99 -72.80"<<" "<< move1.vertex[0]<<" "<<move1.vertex[1]<<" "<<move1.vertex[2]<<" "<<move2.vertex[0]<<" "<<move2.vertex[1]<<" "<<move2.vertex[2]<<" "<<move3.vertex[0]<<" "<<move3.vertex[1]<<" "<<move3.vertex[2]<<" "<< "7.44 0.41 -0.79 -43.30 -29.41 -51.55 9.99 -65.35 38.75 -37.12 3.99 0.76 6.54 11.43 -23.87 5.11 -14.76 -22.61 "<<endl; 		// On ecrit dans le fichier de destination
+                flux <<"45.1261 41.6193 0.1593 -2.55 -4.82 -16.27 7.08 -4.90 1.08 -2.03 15.98 7.02 -4.72 -3.29 -0.10 -10.07 5.49 -20.86 2.47 7.37 -25.09 4.97 0.84 0.05 -2.33 16.76 -3.16 0.00 0.00 0.00 4.03 -0.14 6.35 -15.84 -47.99 -72.80 -102.01 -75.35 -115.95 15.03 -3.90 0.74 7.44 0.41 -0.79"<<" "<< move1.vertex[0]<<" "<<move1.vertex[1]<<" "<<move1.vertex[2]<<" "<<move2.vertex[0]<<" "<<move2.vertex[1]<<" "<<move2.vertex[2]<<" "<<move3.vertex[0]<<" "<<move3.vertex[1]<<" "<<move3.vertex[2]<<" "<< "6.54 11.43 -23.87 5.11 -14.76 -22.61 "<<endl; 					// On ecrit dans le fichier de destination
             }                          // Et au passage on le créer si il n'existe pas
             else
             {
                 cout << "ERREUR: Impossible d'ouvrir le fichier." << endl;
             }
-   
+
 }
 
+// Write enough frame to do an animation
+void body::computeAnimation(float a, float b, float c) {
 
-//7.44 0.41 -0.79 -43.30 -29.41 -51.55 9.99 -65.35 38.75 -37.12 3.99 0.76 6.54 11.43 -23.87 5.11 -14.76 -22.61 
+	float startEndX = -37.12, startEndY= 3.99,startEndZ=0.76 ;
+
+	int frame = 100 ;
+
+	float deltaX = abs(a-startEndX) ;
+	float moveX = deltaX/frame ;
+
+	float deltaY = abs(b-startEndY) ;
+	float moveY = deltaY/frame ;
+
+	float deltaZ = abs(c-startEndZ) ;
+	float moveZ = deltaZ/frame ;
+
+	for (int i =1; i<frame+1; i++) {
+		compute(startEndX+i*moveX, startEndY+i*moveY, startEndZ+i*moveZ) ;
+	}
+}
 
 
 
